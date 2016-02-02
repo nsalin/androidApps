@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.alin.braintrainer.MainActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GO!"
+        android:id="@+id/startGame"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="startGame"
+        android:textSize="60sp"
+        android:padding="60sp"
+        android:background="@color/lightGreen"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:id="@+id/gameRelativeLayout">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/timer"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:padding="15sp"
+            android:background="@color/darkyOrange"
+            android:layout_columnWeight="0"
+            android:layout_rowWeight="0"
+            android:editable="false"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:id="@+id/livescore"
+            android:layout_row="0"
+            android:layout_column="4"
+            android:padding="15sp"
+            android:background="@color/darkyOrange"
+            android:layout_columnWeight="0"
+            android:layout_rowWeight="0"
+            android:editable="false"
+            android:textSize="20sp"
+            android:layout_alignTop="@+id/timer"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_column="2"
+            android:layout_row="0"
+            android:id="@+id/ecuation"
+            android:layout_columnSpan="3"
+            android:layout_rowWeight="0"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:layout_gravity="fill"
+            android:editable="false"
+            android:paddingTop="10dp"
+            android:layout_centerHorizontal="true" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timer"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:id="@+id/gridLayout">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:tag="0"
+                android:onClick="choosedAnswer"
+                android:layout_gravity="fill"
+                android:background="@color/lightBlue"
+                android:textSize="80sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:tag="1"
+                android:onClick="choosedAnswer"
+                android:layout_gravity="fill"
+                android:background="@color/lightGreen"
+                android:textSize="80sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:tag="2"
+                android:onClick="choosedAnswer"
+                android:layout_gravity="fill"
+                android:background="@color/lightPink"
+                android:textSize="80sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:tag="3"
+                android:onClick="choosedAnswer"
+                android:layout_gravity="fill"
+                android:background="@color/darkerRed"
+                android:textSize="80sp"
+                />
+
+
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/liveResult"
+            android:layout_below="@+id/gridLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:textSize="35sp"
+            android:editable="false"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Again"
+            android:id="@+id/playAgain"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:onClick="playAgain"/>
+    </RelativeLayout>
+
+</RelativeLayout>
+
