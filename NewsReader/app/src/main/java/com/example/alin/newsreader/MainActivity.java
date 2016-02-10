@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseManager databaseManager = new DatabaseManager(this);
         if (FactoryMethods.isOnline(this)) {
 
-
+            newsListArray.clear();
             webDownloadTask = new WebDownloadTask(allNewsURL);
             webDownloadTask.setCallback(new AsyncResponse<String>() {
                 @Override
