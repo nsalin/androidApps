@@ -23,8 +23,7 @@ public class WebViewActivity extends AppCompatActivity {
         Integer articleID = bundle.getInt("articleID");
         task.execute(articleURL);
         String content = ContentDownloadTask.webPageContent;
-
-        dbm.insertContentById(articleID, content);
+        dbm.insertArticle(articleID, articleName, articleURL, content);
 
 
 

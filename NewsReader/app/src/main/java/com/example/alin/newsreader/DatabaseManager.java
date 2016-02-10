@@ -51,7 +51,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public boolean insertContentById(Integer articleID, String content){
-            sqLiteDatabase.execSQL("UPDATE "+TABLE_NAME+" SET "+ CONTENT_PAGE + "="+content+" WHERE "+ARTICLE_ID+"= "+articleID+";");
+            sqLiteDatabase.execSQL("UPDATE " + TABLE_NAME + " SET " + CONTENT_PAGE + "=\"" + content + "\" WHERE " + ARTICLE_ID + "= " + articleID + ";");
         return true;
     }
 
@@ -69,6 +69,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return arrayList;
+    }
+
+    public String getContentPage(Integer articleID){
+        StringBuilder  content = null;
+        Cursor cur = sqLiteDatabase.rawQuery("SELECT "+CONTENT_PAGE+" FROM "+TABLE_NAME+" WHERE "+ARTICLE_ID+ " = "+ articleID, null);
+        cur.moveToFirst();
+        while(cur.isAfterLast() == false){
+            content.append(cur.getString(cur.getColumnIndex(CONTENT_PAGE)));
+            cur.moveToNext();
+        }
+        return content.toString();
     }
 
 }

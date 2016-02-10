@@ -3,6 +3,7 @@ package com.example.alin.newsreader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     WebDownloadTask webDownloadTask;
     ListView listView;
     Intent intent;
+    boolean offline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
         intent = new Intent(this, WebViewActivity.class);
-        final DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-
+        DatabaseManager databaseManager = new DatabaseManager(this);
         if (FactoryMethods.isOnline(this)) {
 
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             newsListArray = databaseManager.getAllArticles();
             newsListAdapter.notifyDataSetChanged();
+            offline = true;
         }
 
         newsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newsListArray);
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("articleName", articleName);
                 bundle.putString("articleURL", articleURL);
                 bundle.putInt("articleID", articleID);
-                databaseManager.insertArticle(articleID, articleName, articleURL, null);
+
 
 
                 System.out.println(articleName + " " + articleURL);
