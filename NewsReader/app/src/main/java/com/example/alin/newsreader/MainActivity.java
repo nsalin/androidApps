@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
         intent = new Intent(this, WebViewActivity.class);
-        DatabaseManager databaseManager = new DatabaseManager(this);
+        final DatabaseManager databaseManager = new DatabaseManager(this);
         if (FactoryMethods.isOnline(this)) {
 
             newsListArray.clear();
@@ -62,20 +62,27 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             newsListArray = databaseManager.getAllArticles();
-            newsListAdapter.notifyDataSetChanged();
+//            newsListAdapter.notifyDataSetChanged();
             offline = true;
         }
 
-        newsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newsListArray);
 
+
+        newsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newsListArray);
         listView.setAdapter(newsListAdapter);
         Log.i("STEP", "adapted");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleName = (new ArrayList<>(WebDownloadTask.articles.keySet()).get(position));
-                String articleURL = (new ArrayList<>(WebDownloadTask.articles.values()).get(position));
-                Integer articleID = WebDownloadTask.articlesIDS.get(position);
+                String articleName, articleURL;
+                Integer articleID;
+
+//                if (offline){
+////                    articleName = databaseManager
+//                }
+                articleName =  (new ArrayList<>(WebDownloadTask.articles.keySet()).get(position));
+                articleURL =  (new ArrayList<>(WebDownloadTask.articles.values()).get(position));
+                articleID = WebDownloadTask.articlesIDS.get(position);
 
                 Bundle bundle = new Bundle();
                 bundle.putString("articleName", articleName);

@@ -68,10 +68,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             arrayList.add(res.getString(res.getColumnIndex(TITLE)));
             res.moveToNext();
         }
+        if(arrayList.size() == 0){
+            System.out.println("ai belit pula");
+        }
+        else {
+            System.out.println("marime array: " + arrayList.size());
+        }
         return arrayList;
     }
 
-    public String getContentPage(Integer articleID){
+    public String getColumnContent(Integer articleID, String column){
         StringBuilder  content = null;
         Cursor cur = sqLiteDatabase.rawQuery("SELECT "+CONTENT_PAGE+" FROM "+TABLE_NAME+" WHERE "+ARTICLE_ID+ " = "+ articleID, null);
         cur.moveToFirst();

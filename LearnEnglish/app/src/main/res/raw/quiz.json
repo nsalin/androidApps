@@ -1,0 +1,56 @@
+{
+  "reading":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas diam erat, vulputate tempor augue in, sagittis egestas sapien. Sed lacus nisi, vehicula maximus ante eget, blandit dignissim lacus. Curabitur auctor pharetra porta. Pellentesque sed consequat est. Phasellus egestas felis ipsum, maximus maximus est consequat sit amet. Donec justo dolor, vestibulum id sodales ac, interdum nec dolor. Nulla gravida condimentum nisi, in rutrum erat feugiat vitae. Donec ullamcorper diam vel arcu varius vulputate. Ut dapibus tellus eget eros sagittis, sed commodo metus placerat. Sed lobortis, urna non pretium consectetur, velit nibh laoreet tellus, non commodo nunc augue hendrerit turpis.",
+  "numberOfQuestions":5,
+  "questions": [
+    {
+      "title": "Fusce in risus pretium, bibendum orci ac, lacinia nibh.",
+      "answers": [
+        "Maecenas et tortor in erat lacinia condimentum at a dui.",
+        "Cras a metus sed augue venenatis viverra ut at felis.",
+        "Proin quis ligula ac neque malesuada tempus.",
+        "Praesent nec dolor egestas, blandit sapien et, ultricies lorem."
+      ],
+      "correct": 2
+    },
+    {
+      "title": "Fusce in risus pretium, bibendum orci ac, lacinia nibh.",
+      "answers": [
+        "Maecenas et tortor in erat lacinia condimentum at a dui.",
+        "Cras a metus sed augue venenatis viverra ut at felis.",
+        "Proin quis ligula ac neque malesuada tempus.",
+        "Praesent nec dolor egestas, blandit sapien et, ultricies lorem."
+      ],
+      "correct": 4
+    },
+    {
+      "title": "Fusce in risus pretium, bibendum orci ac, lacinia nibh.",
+      "answers": [
+        "Maecenas et tortor in erat lacinia condimentum at a dui.",
+        "Cras a metus sed augue venenatis viverra ut at felis.",
+        "Proin quis ligula ac neque malesuada tempus.",
+        "Praesent nec dolor egestas, blandit sapien et, ultricies lorem."
+      ],
+      "correct": 1
+    },
+    {
+      "title": "Fusce in risus pretium, bibendum orci ac, lacinia nibh.",
+      "answers": [
+        "Maecenas et tortor in erat lacinia condimentum at a dui.",
+        "Cras a metus sed augue venenatis viverra ut at felis.",
+        "Proin quis ligula ac neque malesuada tempus.",
+        "Praesent nec dolor egestas, blandit sapien et, ultricies lorem."
+      ],
+      "correct": 3
+    },
+    {
+      "title": "Fusce in risus pretium, bibendum orci ac, lacinia nibh.",
+      "answers": [
+        "Maecenas et tortor in erat lacinia condimentum at a dui.",
+        "Cras a metus sed augue venenatis viverra ut at felis.",
+        "Proin quis ligula ac neque malesuada tempus.",
+        "Praesent nec dolor egestas, blandit sapien et, ultricies lorem."
+      ],
+      "correct": 2
+    }
+  ]
+}
