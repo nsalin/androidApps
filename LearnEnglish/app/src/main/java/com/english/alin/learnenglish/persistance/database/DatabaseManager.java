@@ -12,20 +12,21 @@ import android.util.Log;
  */
 public class DatabaseManager extends SQLiteOpenHelper{
     final static String DATABASE_NAME = "learnenglish";
-    final static String QUSTIONS_TABLE = "questions";
-    final static String QUIZ_TABLE = "questionsDetails";
-    final static String ANSWERS_TABLE = "answers";
-    final static String DATE = "date";
+    final static String READING_TABLE = "reading";
+    final static String READING_ID = "reading_id";
     final static String READING = "reading";
-    final static String NUMBER_OF_QUESTIONS = "numberOfQuestions";
-    final static String QUESTIONS = "questions";
-    final static String QUESTIONS_ID = "questions_id";
+    final static String QUIZ_TABLE = "quiz";
     final static String QUIZ_ID = "quiz_id";
-    final static String TITLE = "title";
-    final static String NUMBER_OF_ANSWERS = "numberOfAnswers";
-    final static String ANSWERS = "answers";
+    final static String DATE = "created_date";
+    final static String QUIZ_TITLE = "quizTitle";
+    final static String QUSTIONS_TABLE = "questions";
+    final static String QUESTIONS_ID = "questions_id";
+    final static String QUESTION = "question";
+    final static String ANSWERS_TABLE = "answers";
+    final static String ANSWERS = "answer_text";
     final static String ANSWERS_ID = "answers_id";
-    final static String CORRECT_ANSWER = "correct";
+    final static String CORRECT_ANSWER = "isCorrect";
+    final static String SEQUENCE_NUMBER = "sequenceNo";
 
     SQLiteDatabase sqlDb = this.getWritableDatabase();
 
@@ -36,26 +37,35 @@ public class DatabaseManager extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i("App-onCreateDB: ", "onCreate");
-        db.execSQL("CREATE TABLE " + QUIZ_TABLE + "" +
-                "( " + QUESTIONS_ID +" INTEGER PRIMARY KEY," +
+        String createReadingTable = "CREATE TABLE " + READING_TABLE + "" +
+                "( " + READING_ID + " INTEGER PRIMARY KEY, " +
+                "" + READING + " VARCHAR )";
+        String createQuizTable = "CREATE TABLE " + QUIZ_TABLE + "" +
+                "( " + QUIZ_ID +" INTEGER PRIMARY KEY," +
                 "" + DATE + " VARCHAR," +
-                "" + READING + " VARCHAR," +
-                "" + NUMBER_OF_QUESTIONS + " INTEGER )");
-
-        db.execSQL("CREATE TABLE " + QUSTIONS_TABLE + "" +
+                "" + READING_ID + " VARCHAR, " +
+                "FOREIGN KEY(" + READING_ID + ") REFERENCES " + READING_TABLE + "(" + READING_ID + "))";
+        String createQuestionsTable = "CREATE TABLE " + QUSTIONS_TABLE + "" +
                 "( id INTEGER PRIMARY KEY," +
-                "" + TITLE + " VARCHAR," +
-                "" + NUMBER_OF_ANSWERS + " INTEGER," +
                 "" + QUESTIONS_ID + " INTEGER," +
-                "" + ANSWERS_ID + " INTEGER, " +
-                "" + CORRECT_ANSWER + " INTEGER," +
-                "FOREIGN KEY("+QUESTIONS_ID+") REFERENCES "+ QUIZ_TABLE +"("+QUESTIONS_ID+"))");
+                "" + QUIZ_ID + " INTEGER," +
+                "" + QUESTION + " INTEGER, " +
+                "FOREIGN KEY(" + QUIZ_ID + ") REFERENCES "+ QUIZ_TABLE +"(" + QUIZ_ID + "))";
 
-        db.execSQL("CREATE TABLE " + ANSWERS_TABLE + "" +
+        String createAnswersTable = "CREATE TABLE " + ANSWERS_TABLE + "" +
                 "( id INTEGER PRIMARY KEY," +
                 "" + ANSWERS + " VARCHAR," +
                 "" + ANSWERS_ID + " INTEGER, " +
-                "FOREIGN KEY(" + ANSWERS_ID + ") REFERENCES " + QUSTIONS_TABLE + "(" + ANSWERS_ID + "))");
+                "" + CORRECT_ANSWER + "INTEGER, " +
+                "" + QUESTIONS_ID + "INTEGER, " +
+                "" + SEQUENCE_NUMBER + "INTEGER, " +
+                "FOREIGN KEY(" + QUESTIONS_ID + ") REFERENCES " + QUSTIONS_TABLE + "(" + QUESTIONS_ID + "))";
+
+        db.execSQL(createReadingTable);
+        db.execSQL(createQuizTable);
+        db.execSQL(createQuestionsTable);
+        db.execSQL(createAnswersTable);
+
     }
 
     @Override
