@@ -14,6 +14,7 @@ import com.english.alin.learnenglish.activities.ImageActivity;
 import com.english.alin.learnenglish.activities.ListenActivity;
 import com.english.alin.learnenglish.activities.QuizActivity;
 import com.english.alin.learnenglish.persistance.AdapterDBJSON;
+import com.english.alin.learnenglish.persistance.DownloadTask;
 import com.english.alin.learnenglish.persistance.database.DatabaseManager;
 import com.facebook.stetho.Stetho;
 
@@ -38,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
 
         databaseManager = new DatabaseManager(getApplicationContext());
-        AdapterDBJSON adapterDBJSON = new AdapterDBJSON();
-        adapterDBJSON.getQuestions();
+        DownloadTask task = new DownloadTask();
+        task.execute();
     }
 
     public void startListen(View id){

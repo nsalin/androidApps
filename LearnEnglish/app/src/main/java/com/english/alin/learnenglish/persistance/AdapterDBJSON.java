@@ -1,5 +1,7 @@
 package com.english.alin.learnenglish.persistance;
 
+import android.util.Log;
+
 import com.english.alin.learnenglish.MainActivity;
 import com.english.alin.learnenglish.persistance.database.DatabaseManager;
 
@@ -36,7 +38,9 @@ public class AdapterDBJSON {
         List<String> questions = new ArrayList<>();
         String title, readingText;
         try {
-            requestedJSON = downloadTask.execute().get();
+            Log.i("App-Adapter: ", "getQuestions");
+            downloadTask.execute();
+            requestedJSON = DownloadTask.retrived;
             date = requestedJSON.getString(DATE);
             readingText = requestedJSON.getString(READING_TEXT);
             Integer numberOfQuestions = requestedJSON.getInt(NUMBER_OF_QUESTIONS);
@@ -58,13 +62,15 @@ public class AdapterDBJSON {
 //                QuizTable quiztable = new QuizTable(date, readingText, numberOfQuestions, correctAnswer, answersId, maxId);
 //                quiztable.save();
             }
-        } catch (JSONException | InterruptedException | ExecutionException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return questions;
     }
 
     private List<String> getAnswers(JSONObject questions, int index, int answerId, int numberOfAnswers){
+        Log.i("App-Adapter: ", "getAnswers");
+
         ArrayList<String> answers = new ArrayList<>();
         try {
             JSONArray questionsArray = questions.getJSONArray(QUESTIONS);
