@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.english.alin.learnenglish.persistance.FactoryMethods.getContent;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.QUESTIONS_ID;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.QUIZ_ID;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.READIND_ID;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.QUESTIONS_TABLE;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.QUIZ_TABLE;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.READING_TABLE;
 
 /**
  * Created by Alin on 3/19/2016.
@@ -53,9 +59,10 @@ public class DownloadTask extends AsyncTask<String, Void, JSONObject> {
             Integer numberOfQuestions = requestedJSON.getInt(NUMBER_OF_QUESTIONS);
             JSONArray questionsArray = requestedJSON.getJSONArray(QUESTIONS);
             JSONObject currentQuestion;
-            MainActivity.databaseManager.insertIntoQustionsDetails(date, readingText, numberOfQuestions);
-            int maxId = MainActivity.databaseManager.getMaxIdQuestionDetails();
-            int answersId = 0;
+            int maxIdReading = MainActivity.databaseManager.getMaxId(READING_TABLE, READIND_ID);
+            MainActivity.databaseManager.insertIntoQuizTable(date, maxIdReading);
+            int maxId = MainActivity.databaseManager.getMaxId(QUIZ_TABLE, QUIZ_ID);
+            int maxAnswers = 0;
 
 
             for (int i = 0; i < numberOfQuestions; i++) {
@@ -65,7 +72,7 @@ public class DownloadTask extends AsyncTask<String, Void, JSONObject> {
                 int correctAnswer = currentQuestion.getInt(CORRECT);
                 int numberOfAnswers = currentQuestion.getInt(NUMBER_OF_ANSWERS);
                 System.out.println(i + "\t" + title);
-                MainActivity.databaseManager.insertIntoQuestions(title, numberOfAnswers, maxId, answersId, correctAnswer);
+                MainActivity.databaseManager.insertIntoQuestions(maxId, q);
                 Log.i("App-Download task", "am bagat in db");
 
                 getAnswers(requestedJSON, i, answersId, numberOfAnswers);
