@@ -2,7 +2,6 @@ package com.english.alin.learnenglish;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,15 +12,9 @@ import android.view.View;
 import com.english.alin.learnenglish.activities.ImageActivity;
 import com.english.alin.learnenglish.activities.ListenActivity;
 import com.english.alin.learnenglish.activities.QuizActivity;
-import com.english.alin.learnenglish.persistance.AdapterDBJSON;
 import com.english.alin.learnenglish.persistance.DownloadTask;
 import com.english.alin.learnenglish.persistance.database.DatabaseManager;
 import com.facebook.stetho.Stetho;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 
 public class MainActivity extends AppCompatActivity {
     public static DatabaseManager databaseManager;

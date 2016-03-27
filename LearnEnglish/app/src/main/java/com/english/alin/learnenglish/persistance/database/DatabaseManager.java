@@ -49,10 +49,11 @@ public class DatabaseManager extends SQLiteOpenHelper{
         sqlDb.insert(READING_TABLE, null, contentValues);
     }
 
-    public void insertIntoQuizTable(String date, Integer readingId){
+    public void insertIntoQuizTable(String date, String quizTitle, Integer readingId){
         Log.i("App-DB: ", "insertIntoQustionsDetails");
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATE, date);
+        contentValues.put(QUIZ_TITLE, quizTitle);
         contentValues.put(READING_ID, readingId);
         sqlDb.insert(QUIZ_TABLE, null, contentValues);
     }
@@ -78,13 +79,13 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public int getMaxId(Tables table, PrimaryKeyColumns column){
-        Log.i("App-DB: ", "getMaxId");
+        Log.i("App-DB: ", "getMaxId"  + String.valueOf(table));
 
         int maxId = 0;
         Cursor cursor = sqlDb.rawQuery("SELECT MAX(" + column + ") as max FROM " + table, null);
         cursor.moveToFirst();
 
-        while (cursor.isAfterLast() == false){
+        while (!cursor.isAfterLast()){
             if (cursor.getString(cursor.getColumnIndex("max")) != null) {
                 maxId = cursor.getInt(cursor.getColumnIndex("max"));
             }
@@ -93,6 +94,22 @@ public class DatabaseManager extends SQLiteOpenHelper{
         cursor.close();
         Log.i("App-DB: ", "getMaxId end" + maxId);
         return maxId;
+    }
+
+    public String getLastReadingText(){
+        Log.i("App-DB: ", "getLastReadingText");
+
+        String lastInsertedText = null;
+        int maxIdFromReadingText = getMaxId(Tables.reading, PrimaryKeyColumns.READING_ID);
+        Cursor cursor = sqlDb.rawQuery("SELECT " + READING + " FROM " + READING_TABLE + " WHERE " + READING_ID + "=" + maxIdFromReadingText, null);
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()){
+            lastInsertedText = cursor.getString(cursor.getColumnIndex(READING));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        Log.i("App-DB: ", "getLastReadingTextEND " + lastInsertedText);
+        return lastInsertedText;
     }
 
 

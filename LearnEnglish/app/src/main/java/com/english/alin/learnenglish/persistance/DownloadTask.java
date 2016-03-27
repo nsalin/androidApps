@@ -3,7 +3,7 @@ package com.english.alin.learnenglish.persistance;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.english.alin.learnenglish.MainActivity;
+import com.english.alin.learnenglish.persistance.database.DatabaseConstants.CorrectAnswer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,96 +12,98 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.english.alin.learnenglish.MainActivity.databaseManager;
 import static com.english.alin.learnenglish.persistance.FactoryMethods.getContent;
+import static com.english.alin.learnenglish.persistance.JSON_URL.REQUEST_URL;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.CorrectAnswer.*;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.CorrectAnswer.FALSE;
 import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.QUESTIONS_ID;
 import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.QUIZ_ID;
-import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.READIND_ID;
-import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.QUESTIONS_TABLE;
-import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.QUIZ_TABLE;
-import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.READING_TABLE;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.PrimaryKeyColumns.READING_ID;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.questions;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.quiz;
+import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.Tables.reading;
 
 /**
  * Created by Alin on 3/19/2016.
  */
 public class DownloadTask extends AsyncTask<String, Void, JSONObject> {
     final static String DATE = "date";
+    final static String QUIZ_TITLE = "quizTitle";
     final static String READING_TEXT = "reading";
-    final static String NUMBER_OF_QUESTIONS = "numberOfQuestions";
     final static String QUESTIONS = "questions";
-    final static String TITLE = "title";
+    final static String QUESTION = "question";
     final static String ANSWERS = "answers";
-    final static String CORRECT = "correct";
-    final static String NUMBER_OF_ANSWERS = "numberOfAnswers";
+    final static String ANSWER = "answer";
+    final static String IS_CORRECT = "isCorrect";
     String date;
 
-    private final static String REQUEST_URL = "http://demo3296892.mockable.io/quiz";
-    public static JSONObject retrived;
+
     @Override
     protected JSONObject doInBackground(String[] params) {
-        System.out.println("m-am executat");
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(getContent(REQUEST_URL));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        getQuestions(jsonObject);
+        fillDatabase(jsonObject);
         return jsonObject;
     }
 
-    public List<String> getQuestions(JSONObject requestedJSON){
-        List<String> questions = new ArrayList<>();
-        String title, readingText;
+    private List<String> fillDatabase(JSONObject requestedJSON){
+        List<String> questionsList = new ArrayList<>();
+        String title, readingText,quizTitle;
         try {
             Log.i("App-Adapter: ", "getQuestions");
             date = requestedJSON.getString(DATE);
             readingText = requestedJSON.getString(READING_TEXT);
-            Integer numberOfQuestions = requestedJSON.getInt(NUMBER_OF_QUESTIONS);
+            quizTitle = requestedJSON.getString(QUIZ_TITLE);
+            databaseManager.insertIntoReadingTable(readingText);
+
             JSONArray questionsArray = requestedJSON.getJSONArray(QUESTIONS);
+            int numberOfQuestions = questionsArray.length();
             JSONObject currentQuestion;
-            int maxIdReading = MainActivity.databaseManager.getMaxId(READING_TABLE, READIND_ID);
-            MainActivity.databaseManager.insertIntoQuizTable(date, maxIdReading);
-            int maxId = MainActivity.databaseManager.getMaxId(QUIZ_TABLE, QUIZ_ID);
-            int maxAnswers = 0;
+
+            int maxIdReading = databaseManager.getMaxId(reading, READING_ID);
+            databaseManager.insertIntoQuizTable(date, quizTitle, maxIdReading);
+            int maxId = databaseManager.getMaxId(quiz, QUIZ_ID);
 
 
             for (int i = 0; i < numberOfQuestions; i++) {
                 Log.i("App-getQuestions", "am intrat in for");
                 currentQuestion = questionsArray.getJSONObject(i);
-                title = currentQuestion.getString(TITLE);
-                int correctAnswer = currentQuestion.getInt(CORRECT);
-                int numberOfAnswers = currentQuestion.getInt(NUMBER_OF_ANSWERS);
-                System.out.println(i + "\t" + title);
-                MainActivity.databaseManager.insertIntoQuestions(maxId, q);
-                Log.i("App-Download task", "am bagat in db");
+                title = currentQuestion.getString(QUESTION);
 
-                getAnswers(requestedJSON, i, answersId, numberOfAnswers);
-                answersId += 1;
-//                QuizTable quiztable = new QuizTable(date, readingText, numberOfQuestions, correctAnswer, answersId, maxId);
-//                quiztable.save();
+                System.out.println(i + "\t" + title);
+                databaseManager.insertIntoQuestions(maxId, title);
+                Log.i("App-Download task", "am bagat in db");
+                int currentQuestionId = databaseManager.getMaxId(questions, QUESTIONS_ID);
+                fillAnswersTable(currentQuestion, currentQuestionId);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return questions;
+        return questionsList;
     }
 
-    private List<String> getAnswers(JSONObject questions, int index, int answerId, int numberOfAnswers){
+    private void fillAnswersTable(JSONObject currentQuestion, int questionId){
         Log.i("App-Adapter: ", "getAnswers");
 
-        ArrayList<String> answers = new ArrayList<>();
         try {
-            JSONArray questionsArray = questions.getJSONArray(QUESTIONS);
-            JSONObject answersArrayObject = questionsArray.getJSONObject(index);
-            JSONArray answersArray = answersArrayObject.getJSONArray(ANSWERS);
+            int numberOfAnswers = currentQuestion.getJSONArray(ANSWERS).length();
+            JSONArray questionsArray = currentQuestion.getJSONArray(ANSWERS);
             for (int i = 0; i < numberOfAnswers ; i++) {
-                answers.add(answersArray.getString(i));
-                System.out.println(answersArray.getString(i));
-                MainActivity.databaseManager.insertIntoAnswers(answersArray.getString(i), answerId);
+                JSONObject answersArrayObject = questionsArray.getJSONObject(i);
+                String answer = answersArrayObject.getString(ANSWER);
+                CorrectAnswer correctAnswer = answersArrayObject.getString(IS_CORRECT).equals("true")? TRUE : FALSE;
+                databaseManager.insertIntoAnswers(answer,correctAnswer, questionId, i+1);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return answers;
     }
+
+
 }

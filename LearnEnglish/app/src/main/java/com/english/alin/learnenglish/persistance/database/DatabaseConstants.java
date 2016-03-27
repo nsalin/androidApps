@@ -4,7 +4,7 @@ package com.english.alin.learnenglish.persistance.database;
  * Created by alinnitu on 3/24/2016.
  */
 public class DatabaseConstants {
-    final static String DATABASE_NAME = "learnenglish";
+    final static String DATABASE_NAME = "learnenglish_v2";
     final static String READING_TABLE = "reading";
     final static String READING_ID = "reading_id";
     final static String READING = "reading";
@@ -28,6 +28,7 @@ public class DatabaseConstants {
     final static String createQuizTable = "CREATE TABLE " + QUIZ_TABLE + "" +
             "( " + QUIZ_ID +" INTEGER PRIMARY KEY," +
             "" + DATE + " VARCHAR," +
+            "" + QUIZ_TITLE + " VARCHAR," +
             "" + READING_ID + " VARCHAR, " +
             "FOREIGN KEY(" + READING_ID + ") REFERENCES " + READING_TABLE + "(" + READING_ID + "))";
 
@@ -40,9 +41,9 @@ public class DatabaseConstants {
    final static String createAnswersTable = "CREATE TABLE " + ANSWERS_TABLE + "" +
            "( " + ANSWERS_ID + " INTEGER PRIMARY KEY, " +
            "" + ANSWERS + " VARCHAR," +
-            "" + CORRECT_ANSWER + "INTEGER, " +
-            "" + QUESTIONS_ID + "INTEGER, " +
-            "" + SEQUENCE_NUMBER + "INTEGER, " +
+            "" + CORRECT_ANSWER + " INTEGER, " +
+            "" + QUESTIONS_ID + " INTEGER, " +
+            "" + SEQUENCE_NUMBER + " INTEGER, " +
             "FOREIGN KEY(" + QUESTIONS_ID + ") REFERENCES " + QUSTIONS_TABLE + "(" + QUESTIONS_ID + "))";
 
     public enum CorrectAnswer {
@@ -59,11 +60,11 @@ public class DatabaseConstants {
     }
 
     public enum PrimaryKeyColumns{
-        READIND_ID, QUIZ_ID, QUESTIONS_ID, ANSWERS_ID
+        READING_ID, QUIZ_ID, QUESTIONS_ID, ANSWERS_ID
     }
 
     public enum Tables{
-        READING_TABLE, QUIZ_TABLE, ANSWERS_TABLE, QUESTIONS_TABLE
+        reading, quiz, answers, questions
     }
 
 }
