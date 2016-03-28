@@ -8,4 +8,5 @@
     <string name="step2"><b><u>Step 2:</u></b></string>
     <string name="listen"><b> Listen to Dialog</b></string>
     <string name="quiz"><b> Quiz - View Questions</b></string>
+    <string name="quizButton">Take Quiz</string>
 </resources>
