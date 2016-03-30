@@ -15,7 +15,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="171dp"
         android:text="Listen"
         android:id="@+id/listen"
         android:layout_alignParentTop="true"
@@ -29,7 +29,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="171dp"
         android:text="Image"
         android:id="@+id/images"
         android:layout_below="@+id/listen"
@@ -43,7 +43,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="171dp"
         android:text="Quiz"
         android:id="@+id/quiz"
         android:layout_below="@+id/images"

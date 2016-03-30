@@ -10,6 +10,8 @@ import android.util.Log;
 /**
  * Created by Alin on 3/20/2016.
  */
+import java.util.ArrayList;
+
 import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.*;
 import static com.english.alin.learnenglish.persistance.database.DatabaseConstants.QUESTIONS_ID;
 
@@ -112,5 +114,75 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return lastInsertedText;
     }
 
+    public int getNumberOfQuestionByReadinId(int readingId){
+        int numberOfQuestions = 0;
+        Cursor cursor = sqlDb.rawQuery("SELECT COUNT(*) as count FROM "+ QUSTIONS_TABLE + " WHERE " + READING_ID + "=" + readingId, null);
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()){
+            numberOfQuestions = cursor.getInt(cursor.getColumnIndex("count"));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return numberOfQuestions;
+    }
 
+    public ArrayList<String> getQuestionsByQuizReadingId(int readingId){
+        ArrayList<String> questions = new ArrayList<>();
+//        int quizId = 0;
+        Cursor cursor = sqlDb.rawQuery("select qs.question from questions qs join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id where rd.reading_id = " + readingId, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            // do what you need with the cursor here
+             questions.add(cursor.getString(cursor.getColumnIndex("question")));
+        }
+        cursor.close();
+        return questions;
+    }
+
+    public ArrayList<Integer> getQuestionsIDsByQuizReadingId(int readingId){
+        ArrayList<Integer> questions = new ArrayList<>();
+//        int quizId = 0;
+        Cursor cursor = sqlDb.rawQuery("select qs.questions_id from questions qs join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id where rd.reading_id = " + readingId, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            // do what you need with the cursor here
+            questions.add(cursor.getInt(cursor.getColumnIndex("questions_id")));
+        }
+        cursor.close();
+        return questions;
+    }
+
+    public ArrayList<String> getAnswersByQuestionId(int questionId){
+        ArrayList<String> answers = new ArrayList<>();
+//        int quizId = 0;
+        Cursor cursor = sqlDb.rawQuery("select answer_text from answers where questions_id = " + questionId, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            // do what you need with the cursor here
+            answers.add(cursor.getString(cursor.getColumnIndex("answer_text")));
+        }
+        cursor.close();
+        return answers;
+    }
+
+    public int getCorrectNoAnswerByQuestionId(int questionId){
+        int correctAnswer = 0;
+        Cursor cursor = sqlDb.rawQuery("select sequenceNo from answers where questions_id = " + questionId + " and isCorrect = 1", null);
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()){
+            correctAnswer = cursor.getInt(cursor.getColumnIndex("count"));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return correctAnswer;
+    }
+
+    public ArrayList<Integer> getCorrectAnswersByReadingId(int readingid){
+        ArrayList<Integer> answersID = new ArrayList<>();
+//        int quizId = 0;
+        Cursor cursor = sqlDb.rawQuery("select aw.sequenceNo from answers aw join questions qs on aw.questions_id = qs.questions_id join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id  where aw.isCorrect = 1 and rd.reading_id = " + readingid, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            // do what you need with the cursor here
+            answersID.add(cursor.getInt(cursor.getColumnIndex("sequenceNo")));
+        }
+        cursor.close();
+        return answersID;
+    }
 }

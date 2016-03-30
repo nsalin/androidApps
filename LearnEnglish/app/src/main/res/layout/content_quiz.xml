@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.QuizActivity"
-    tools:showIn="@layout/activity_quiz">
+    tools:showIn="@layout/activity_quiz"
+    android:background="#3da9ae">
     <Button
         android:id="@+id/takeQuiz"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:text="@string/quizButton"
-        android:onClick="startTest"/>
+        android:onClick="startTest"
+        android:background="#1dd2af"/>
 
     <ScrollView
         android:layout_above="@+id/takeQuiz"
