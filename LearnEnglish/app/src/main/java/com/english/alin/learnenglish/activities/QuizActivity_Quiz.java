@@ -31,7 +31,7 @@ public class QuizActivity_Quiz extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_activity__quiz);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Quiz");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -42,7 +42,6 @@ public class QuizActivity_Quiz extends AppCompatActivity {
         radioIds = new ArrayList<>();
         radiogGroupIds = new ArrayList<>();
 
-        Log.i("RadioQ-Create", "activity started");
         final ProgressDialog progressDialog = ProgressDialog.show(this, "Please wait...", "Creating quiz...", true);
         new Thread(new Runnable() {
             @Override
@@ -54,71 +53,57 @@ public class QuizActivity_Quiz extends AppCompatActivity {
                     ArrayList<Integer> questionsId = databaseManager.getQuestionsIDsByQuizReadingId(maxIdReadingText);
                     correctAnswer = databaseManager.getCorrectAnswersByReadingId(maxIdReadingText);
 
-
                     int numberOfRadioGroupsNeeded = questions.size();
-                    Log.i("RadioQ-extT", "questions.size " + numberOfRadioGroupsNeeded + " maxReadingText " + maxIdReadingText);
                     for (int i = 0; i < numberOfRadioGroupsNeeded; i++) {
                         questionText = new TextView(getApplicationContext());
                         questionText.setText(questions.get(i));
-                        Log.i("RadioQ-Qes", questions.get(i));
                         questionText.setTextColor(Color.BLACK);
                         questionText.setTextSize(15);
-                        Log.i("RadioQ-Text", "done");
                         linearLayout.addView(questionText);
 
                         radioGroup = new RadioGroup(getApplicationContext());
                         radioGroup.setOrientation(RadioGroup.VERTICAL);
-//                        radioGroup.setId(i);
-//                        radiogGroupIds.add(radioGroup.getId());
+                        radioGroup.setId(i);
                         Log.i("RadioQ-Group", "done");
                         ArrayList<String> answers = databaseManager.getAnswersByQuestionId(questionsId.get(i));
-                        int tagValue = -1;
                         for (int j = 0; j < answers.size(); j++) {
                             radioButton = new RadioButton(getApplicationContext());
                             radioGroup.addView(radioButton);
                             radioButton.setText(answers.get(j));
-                            tagValue = j;
-                            radioButton.setTag(tagValue);
-                            int id = i * j;
-//                            radioButton.setId(id);
-//                            radioIds.add(id);
+                            radioButton.setTag(j);
+                            radioButton.setId(j);
 
                         }
-                        Log.i("RadioQ-Group", "done");
                         linearLayout.addView(radioGroup);
-                        radioGroup.setOnClickListener(new View.OnClickListener() {
-
+                        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                             @Override
-                            public void onClick(View v) {
-                                int count = radioGroup.getChildCount();
-                                for (int i = 0; i < count; i++) {
-                                    View view = radioGroup.getChildAt(i);
-                                    if (view instanceof RadioButton) {
-                                        String getRTag = String.valueOf(view.getTag());
-                                        if (!getRTag.equals(String.valueOf(correctAnswer.get(linearLayout.indexOfChild(radioGroup) + 1)))) {
-                                            view.setVisibility(View.INVISIBLE);
-                                            Log.i("RadioButton", "tapped");
-                                        } else {
-                                            Log.i("RadioButton", "tag=" + getRTag + " compareTo=" + correctAnswer.get(linearLayout.indexOfChild(radioGroup) + 1));
+                            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                int count = group.getChildCount();
+                                View view = group.getChildAt(checkedId);
+                                if (view instanceof RadioButton) {
+                                    RadioButton radioButton = (RadioButton) view;
+                                    String getRTag = String.valueOf(view.getTag());
+
+                                    if (!getRTag.equals(String.valueOf(correctAnswer.get(group.getId())))) {
+                                        radioButton.setVisibility(View.INVISIBLE);
+
+                                    } else {
+                                        for (int i = 0; i < count; i++) {
+                                            group.getChildAt(i).setEnabled(false);
                                         }
                                     }
-
                                 }
+
                             }
                         });
-                        Log.i("RadioQ-Lay", "done");
                     }
 
-//                    Thread.sleep(1000);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 progressDialog.dismiss();
             }
         }).start();
-
-    }
-    public void submitAnswers(View view){
     }
 
 }

@@ -45,14 +45,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public void insertIntoReadingTable(String readingText){
-        Log.i("App-DB: ", "insertIntoReadingTable");
         ContentValues contentValues = new ContentValues();
         contentValues.put(READING, readingText);
         sqlDb.insert(READING_TABLE, null, contentValues);
     }
 
     public void insertIntoQuizTable(String date, String quizTitle, Integer readingId){
-        Log.i("App-DB: ", "insertIntoQustionsDetails");
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATE, date);
         contentValues.put(QUIZ_TITLE, quizTitle);
@@ -61,8 +59,6 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public void insertIntoQuestions(Integer quizId, String question){
-        Log.i("App-DB: ", "insertIntoQuestions");
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(QUIZ_ID, quizId);
         contentValues.put(QUESTION, question);
@@ -70,8 +66,6 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public void insertIntoAnswers(String answer, CorrectAnswer correctAnswer, Integer questionId, Integer sequencenumber){
-        Log.i("App-DB: ", "insertIntoAnswers");
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(ANSWERS, answer);
         contentValues.put(CORRECT_ANSWER, correctAnswer.correct_answer_value());
@@ -81,8 +75,6 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public int getMaxId(Tables table, PrimaryKeyColumns column){
-        Log.i("App-DB: ", "getMaxId"  + String.valueOf(table));
-
         int maxId = 0;
         Cursor cursor = sqlDb.rawQuery("SELECT MAX(" + column + ") as max FROM " + table, null);
         cursor.moveToFirst();
@@ -94,13 +86,10 @@ public class DatabaseManager extends SQLiteOpenHelper{
             cursor.moveToNext();
         }
         cursor.close();
-        Log.i("App-DB: ", "getMaxId end" + maxId);
         return maxId;
     }
 
     public String getLastReadingText(){
-        Log.i("App-DB: ", "getLastReadingText");
-
         String lastInsertedText = null;
         int maxIdFromReadingText = getMaxId(Tables.reading, PrimaryKeyColumns.READING_ID);
         Cursor cursor = sqlDb.rawQuery("SELECT " + READING + " FROM " + READING_TABLE + " WHERE " + READING_ID + "=" + maxIdFromReadingText, null);
@@ -110,7 +99,19 @@ public class DatabaseManager extends SQLiteOpenHelper{
             cursor.moveToNext();
         }
         cursor.close();
-        Log.i("App-DB: ", "getLastReadingTextEND " + lastInsertedText);
+        return lastInsertedText;
+    }
+
+    public String getLastDate(){
+        String lastInsertedText = null;
+        int maxIdFromReadingText = getMaxId(Tables.reading, PrimaryKeyColumns.READING_ID);
+        Cursor cursor = sqlDb.rawQuery("SELECT " + DATE + " FROM " + QUIZ_TABLE + " WHERE " + READING_ID + "=" + maxIdFromReadingText, null);
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()){
+            lastInsertedText = cursor.getString(cursor.getColumnIndex(DATE));
+            cursor.moveToNext();
+        }
+        cursor.close();
         return lastInsertedText;
     }
 
@@ -128,10 +129,8 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     public ArrayList<String> getQuestionsByQuizReadingId(int readingId){
         ArrayList<String> questions = new ArrayList<>();
-//        int quizId = 0;
         Cursor cursor = sqlDb.rawQuery("select qs.question from questions qs join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id where rd.reading_id = " + readingId, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            // do what you need with the cursor here
              questions.add(cursor.getString(cursor.getColumnIndex("question")));
         }
         cursor.close();
@@ -140,10 +139,8 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     public ArrayList<Integer> getQuestionsIDsByQuizReadingId(int readingId){
         ArrayList<Integer> questions = new ArrayList<>();
-//        int quizId = 0;
         Cursor cursor = sqlDb.rawQuery("select qs.questions_id from questions qs join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id where rd.reading_id = " + readingId, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            // do what you need with the cursor here
             questions.add(cursor.getInt(cursor.getColumnIndex("questions_id")));
         }
         cursor.close();
@@ -152,10 +149,8 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     public ArrayList<String> getAnswersByQuestionId(int questionId){
         ArrayList<String> answers = new ArrayList<>();
-//        int quizId = 0;
         Cursor cursor = sqlDb.rawQuery("select answer_text from answers where questions_id = " + questionId, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            // do what you need with the cursor here
             answers.add(cursor.getString(cursor.getColumnIndex("answer_text")));
         }
         cursor.close();
@@ -176,10 +171,8 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     public ArrayList<Integer> getCorrectAnswersByReadingId(int readingid){
         ArrayList<Integer> answersID = new ArrayList<>();
-//        int quizId = 0;
         Cursor cursor = sqlDb.rawQuery("select aw.sequenceNo from answers aw join questions qs on aw.questions_id = qs.questions_id join quiz qz on qs.quiz_id = qz.quiz_id join reading rd on qz.reading_id = rd.reading_id  where aw.isCorrect = 1 and rd.reading_id = " + readingid, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            // do what you need with the cursor here
             answersID.add(cursor.getInt(cursor.getColumnIndex("sequenceNo")));
         }
         cursor.close();

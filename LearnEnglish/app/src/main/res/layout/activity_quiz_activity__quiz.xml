@@ -19,10 +19,4 @@
 
         </LinearLayout>
     </ScrollView>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:text="@string/submit"
-        android:background="#1dd2af"/>
 </RelativeLayout>

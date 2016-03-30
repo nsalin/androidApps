@@ -38,7 +38,6 @@ public class QuizActivity extends AppCompatActivity {
     public void startTest(View view){
         Intent intent = new Intent(this,QuizActivity_Quiz.class);
         intent.putExtra("maxIdReadingText", databaseManager.getMaxId(reading, READING_ID));
-        Log.i("RadioQ-Creating ", String.valueOf(databaseManager.getMaxId(reading, READING_ID)));
         startActivity(intent);
     }
 

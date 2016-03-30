@@ -51,46 +51,42 @@ public class DownloadTask extends AsyncTask<String, Void, JSONObject> {
         return jsonObject;
     }
 
-    private List<String> fillDatabase(JSONObject requestedJSON){
-        List<String> questionsList = new ArrayList<>();
-        String title, readingText,quizTitle;
+    private void fillDatabase(JSONObject requestedJSON){
+        String title, readingText,quizTitle,dateInserted,readingTextInserted;
         try {
-            Log.i("App-Adapter: ", "getQuestions");
+            readingTextInserted = databaseManager.getLastReadingText();
+            dateInserted = databaseManager.getLastDate();
             date = requestedJSON.getString(DATE);
             readingText = requestedJSON.getString(READING_TEXT);
-            quizTitle = requestedJSON.getString(QUIZ_TITLE);
-            databaseManager.insertIntoReadingTable(readingText);
+            if (!readingText.equals(readingTextInserted) || !date.equals(dateInserted)){
+                quizTitle = requestedJSON.getString(QUIZ_TITLE);
+                databaseManager.insertIntoReadingTable(readingText);
 
-            JSONArray questionsArray = requestedJSON.getJSONArray(QUESTIONS);
-            int numberOfQuestions = questionsArray.length();
-            JSONObject currentQuestion;
+                JSONArray questionsArray = requestedJSON.getJSONArray(QUESTIONS);
+                int numberOfQuestions = questionsArray.length();
+                JSONObject currentQuestion;
 
-            int maxIdReading = databaseManager.getMaxId(reading, READING_ID);
-            databaseManager.insertIntoQuizTable(date, quizTitle, maxIdReading);
-            int maxId = databaseManager.getMaxId(quiz, QUIZ_ID);
+                int maxIdReading = databaseManager.getMaxId(reading, READING_ID);
+                databaseManager.insertIntoQuizTable(date, quizTitle, maxIdReading);
+                int maxId = databaseManager.getMaxId(quiz, QUIZ_ID);
 
 
-            for (int i = 0; i < numberOfQuestions; i++) {
-                Log.i("App-getQuestions", "am intrat in for");
-                currentQuestion = questionsArray.getJSONObject(i);
-                title = currentQuestion.getString(QUESTION);
+                for (int i = 0; i < numberOfQuestions; i++) {
+                    currentQuestion = questionsArray.getJSONObject(i);
+                    title = currentQuestion.getString(QUESTION);
 
-                System.out.println(i + "\t" + title);
-                databaseManager.insertIntoQuestions(maxId, title);
-                Log.i("App-Download task", "am bagat in db");
-                int currentQuestionId = databaseManager.getMaxId(questions, QUESTIONS_ID);
-                fillAnswersTable(currentQuestion, currentQuestionId);
+                    databaseManager.insertIntoQuestions(maxId, title);
+                    int currentQuestionId = databaseManager.getMaxId(questions, QUESTIONS_ID);
+                    fillAnswersTable(currentQuestion, currentQuestionId);
 
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return questionsList;
     }
 
     private void fillAnswersTable(JSONObject currentQuestion, int questionId){
-        Log.i("App-Adapter: ", "getAnswers");
-
         try {
             int numberOfAnswers = currentQuestion.getJSONArray(ANSWERS).length();
             JSONArray questionsArray = currentQuestion.getJSONArray(ANSWERS);
@@ -98,7 +94,7 @@ public class DownloadTask extends AsyncTask<String, Void, JSONObject> {
                 JSONObject answersArrayObject = questionsArray.getJSONObject(i);
                 String answer = answersArrayObject.getString(ANSWER);
                 CorrectAnswer correctAnswer = answersArrayObject.getString(IS_CORRECT).equals("true")? TRUE : FALSE;
-                databaseManager.insertIntoAnswers(answer,correctAnswer, questionId, i+1);
+                databaseManager.insertIntoAnswers(answer,correctAnswer, questionId, i);
             }
         } catch (JSONException e) {
             e.printStackTrace();
